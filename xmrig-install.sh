@@ -7,6 +7,9 @@ if [ "$user" -ne 0 ]
   exit
 fi
 
+#copy servicefile for future use
+cp xmrig.service /etc/systemd/system/
+
 #update & installing a few useful programs
 apt update && apt -y upgrade
 
@@ -39,9 +42,7 @@ sed --in-place "s/$(grep \"user\": config.json)/\"user\":\"8BVwcvZHJNqfigwzLQG52
 sed --in-place "s/$(grep \"rig-id\": config.json)/\"rig-id\":\"miner_$(date +%d.%m.%Y)\",/" config.json 
 sed --in-place "s/$(grep "\"tls\": false" config.json)/\"tls\": true,/" config.json 
 
-#installing systemd service to keep miner always working
-cd /etc/systemd/system/
-wget https://github.com/maciexZ/mine-monero/blob/main/xmrig.service
+#enable systemd service to keep miner always working
 systemctl enable xmrig.service
 
 #starting the miner
