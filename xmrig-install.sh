@@ -10,11 +10,8 @@ fi
 #copy servicefile for future use
 cp xmrig.service /etc/systemd/system/
 
-#update & installing a few useful programs
+#update & upgrade
 apt update && apt -y upgrade
-
-#this can be skiped 
-#apt -y install lshw fail2ban htop
 
 #installing xmrig dependencies
 apt -y install build-essential cmake git libhwloc-dev libssl-dev libuv1-dev
@@ -30,14 +27,10 @@ make -Cbuild -j$(nproc)
 cp build/xmrig ~/xmrig
 cp src/config.json ~/xmrig
 
-#security issue if you mine on remote machine
-#systemctl enable fail2ban
-#systemctl start fail2ban
-
 #configuration of xmrig
 cd /root/xmrig
 sed --in-place "s/$(grep \"url\": config.json)/\"url\":\"de.minexmr.com:443\",/" config.json 
-#YOUR monero address, here mined monero goes.
+#YOUR monero address where mined monero goes.
 sed --in-place "s/$(grep \"user\": config.json)/\"user\":\"8BVwcvZHJNqfigwzLQG52B4KPrEQVkucA48knrzXEQCbQTNkt6MuFqrNfFY63uBkXASeHyWtnKpwbL1Qv6zkjwNXDKXXew7\",/" config.json 
 sed --in-place "s/$(grep \"rig-id\": config.json)/\"rig-id\":\"miner_$(date +%d.%m.%Y)\",/" config.json 
 sed --in-place "s/$(grep "\"tls\": false" config.json)/\"tls\": true,/" config.json 
